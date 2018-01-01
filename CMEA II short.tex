@@ -1,0 +1,928 @@
+\documentclass[8pt,a4paper]{scrartcl}
+
+\usepackage[english]{babel}
+
+\input{../Headerfiles/Packages}
+\input{../Headerfiles/Titles}
+\input{../Headerfiles/Commands}
+
+\renewcommand{\baselinestretch}{1}
+\parindent 0pt
+
+\author{GianAndrea Müller / Pascal Müller}
+\title{CMEA II - short version}
+
+\begin{document}
+
+%\begin{multicols*}{3}
+%\maketitle
+%\small
+%\tableofcontents
+%\normalsize
+%\end{multicols*}
+
+\newpage
+
+\begin{multicols*}{3}
+
+\begin{tabular}{ll}
+Autonomous $F(U(t))$ &Non-Autonomous $F(U(t),t)$\\
+F does not depend on t& $u'(t)=u(t)+t$\\
+%\hline
+%Linear & Non-Linear\\
+%F is linear in $u(t)$&$u'(t)=\sin(u(t))$
+\end{tabular}
+
+\importname{FE Method \hlcyan{(Consistent form)}}{$u'(t^n)\approx\frac{u(t^{n+1})-u(t^n)}{\Delta t}\approx\frac{U_{n+1}-U_n}{\Delta t}$}
+
+\importname{FE Method \hlpink{(Update form)}}{$U_{n+1}=U_n+\Delta t F(t^n,U_n)$}
+
+\importname{BE Method}{$u'(t^{n+1})\approx\frac{u(t^{n+1})-u(t^n)}{\Delta t}\approx\frac{U_{n+1}-U_n}{\Delta t}$}
+
+\importname{Trapezoidal rule}{$\int_a^bf(x)dx\approx(b-a)\left(\frac{f(a)+f(b)}{2}\right)$}
+
+\important{$U_{n+1}=u_n+\frac{\Delta t}{2}F(t^n,U_n)+\frac{\Delta t}{2}F(t^{n+1},U_{n+1})$}
+
+
+\importname{Midpoint rule}{$u'(t^n)\approx\frac{U_{n+1}-U_{n-1}}{2\Delta t}\quad u''(t^n)\approx\frac{u_{j+1}-2u_j+u_{j-1}}{\Delta x^2}$}
+
+\note{In the beginning we only have one initial value, but need two. Possible solution: $U_1=u_0+\Delta F(0,u_0)$ (Forward Euler method)}
+
+\subsection*{Truncation error}
+
+\important{$T_n=u'(t)-F(t,u(t))$}
+
+\note{Replace $u'(t)$ with approximation defined by applied method. \hlcyan{(Consistent form)}}
+
+\mportabflex{l@{=}l}{
+$\left.u(t)\right|_{t_0=t^n}$&$u(t^n)+(t-t^n)\cdot u'(t^n)+(t-t^n)^2\frac{u''(t^n)}{2}+\cdots$\\
+$\left.u'(t)\right|_{t_0=t^n}$&$u'(t^n)+(t-t^n)\cdot u''(t^n)+(t-t^n)^2\frac{u'''t^n)}{2}+\cdots$
+}
+
+\note{$T_n^{Midpoint}=T_n^{Trapezoidal}=\mathcal{O}(\Delta t^2)$
+
+$T_n^{BE}=T_n^{FE}=\mathcal{O}(\Delta t)$
+}
+
+\subsubsection*{One Step Error / Global Error}
+
+Inserting the exact solution into the \hlpink{update form} of a given method \dahe local \glqq One Step Error\grqq: $L_j=\mathcal{O}((\Delta t)^{q+1})$
+
+Adding all one step errors over all t yields the \glqq Global Error\grqq as an upper bound to the total error.
+
+\important{$E_N:=u(t^N)-U_N\leq \sum\limits_{j=0}^{N-1}|L_j|$}
+
+\important{$E_N\approx \mathcal{O}((\Delta t)^{q+1})\cdot N=\mathcal{O}((\Delta t)^{q+1}\cdot\frac{T}{\Delta t}\approx \mathcal{O}((\Delta t)^q)$}
+
+\subsubsection*{Newtons Method}
+
+\mportabflex{r@{ = }l}{
+$\vec{G}(x)$&$0$\\
+$D\vec{G}(x_k)\Delta x_k$&$-\vec{G}(x_k)$\\
+$x_{k+1}$&$x_k+\Delta x_k$
+}
+
+\subsubsection*{Runge-Kutta-N (RK-N)}
+
+\importabflex{rcl}{
+$Y_1$&=&$U_n+\Delta t\sum\limits_{j=1}^s a_{1j}F(t^n+c_j\Delta t,Y_j)$\\
+$Y_2$&=&$U_n+\Delta t\sum\limits_{j=1}^s a_{2j}F(t^n+c_j\Delta t,Y_j)$\\
+$\cdot$&$\cdot$&$\cdot$\\
+$Y_s$&=&$U_n+\Delta t\sum\limits_{j=1}^s a_{sj}F(t^n+c_j\Delta t,Y_j)$\\
+$U_{n+1}$&=&$U_n+\Delta t\sum\limits_{j=1}^s b_jF(t^n+c_j\Delta t,Y_j)$\\
+$U_0$&=&$u_0$
+}
+
+\begin{multicols*}{2}
+
+\mportabflex{c|cccc}{
+$c_1$&$a_{11}$&$a_{12}$&$\cdots$&$a_{1s}$\\
+$c_2$&$a_{21}$&$a_{22}$&$\cdots$&$a_{2s}$\\
+$\vdots$&$\vdots$&$\vdots$&&$\vdots$\\
+$c_s$&$a_{s1}$&$a_{s2}$&$\cdots$&$a_{ss}$\\
+\hline
+&$b_1$&$b_2$&$\cdots$&$b_s$
+}
+
+\mportname{\\ \textbf{consistency}}{$\sum\limits_{j=1}^s a_{ij}=c_i\qquad \sum\limits_{j=1}^s b_j=1$}
+
+\mportname{\\ \textbf{$\mathbf{2^{nd}}$ order accurate}}{$\sum\limits_{j=1}^s b_j c_j =\onha$}
+
+\mportable{
+$\sum\limits_{j=1}^s b_jc_j^2$&$=\frac{1}{3}$\\
+$\sum\limits_{j=1}^s\sum\limits_{i=1}^s b_ia_{ij}c_j$&$=\frac{1}{6}$\\
+\multicolumn{2}{c}{$\mathbf{3^{rd}}$\textbf{ order accurate}}
+}
+
+\end{multicols*}
+
+\begin{minipage}{0.45\linewidth}
+
+\textbf{Explicit RK}
+
+\fbox{$a_{ij} = 0$ if $j\geq i$}
+
+$A$ strictly lower triangular.
+
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\linewidth}
+
+\textbf{DIRK}
+
+\fbox{$a_{ij}=0$ if $j>i$, $a_{ii}\neq 0$ for some i}
+
+$A$ lower triangular.
+
+\end{minipage}
+
+\section*{Multi-Step Methods}
+
+
+\begin{itemize}
+\item \textbf{Advantage:} F only needs to be evaluated once each time step. RK methods need multiple evaluations.
+\item \textbf{Disadvantage:} Variable time-steps difficult to implement. Require several starting values.
+\end{itemize}
+
+\importname{linear multi-step method}{$\sum\limits_{j=0}^\gamma\alpha_jU_{n+j}=\Delta t\sum\limits_{j=0}^\gamma\beta_jF(t^{n+j},U_{n+j})$}
+
+\begin{minipage}[t]{0.45\linewidth}
+\textbf{Adam's Method}
+
+\mportabflex{r@{ = }l}{
+$\alpha_\gamma$&$1$\\
+$\alpha_{\gamma-1}$&$-1$\\
+$\alpha_j$&$0$
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\linewidth}
+\textbf{Adams-Bashforth}
+
+\mportant{$\beta_\gamma =0\rightarrow $ explicit}
+\end{minipage}
+
+\footnotesize
+\importabflex{cr@{ = }l}{
+$(AB1)$&$U_{n+1}$&$U_n+\Delta tF(U_n)$\\
+$(AB2)$&$U_{n+2}$&$U_{n+1}+\frac{\Delta t}{2}(-F(U_n)+3F(U_{n+1})$\\
+$(AB3)$&$U_{n+3}$&$U_{n+2}+\frac{\Delta t}{12}(5F(U_n)-16F(U_{n+1})+23F(U_{n+2})$
+}\normalsize
+
+\mportant{$\beta_\gamma\neq 0\rightarrow$ implicit: \textbf{Adam's Moultons Method}}
+
+\footnotesize
+\importabflex{l}{
+$(AM1):\ U_{n+1}=U_n+\frac{\Delta t}{2}(F(U_n)+F(U_{n+1}))$\\
+$(AM2):\ U_{n+2}=U_{n+1}+\frac{\Delta t}{12}(-F(U_n)+8F(U_{n+1})+5F(U_{n+2}))$\\
+$(AM3):\ U_{n+3}=U_{n+2}+\frac{\Delta t}{24}(F(U_n)-5F(U_{n+1})+19F(U_{n+2})$\\
+$\hspace{20ex}+9F(U_{n+3}))$
+}
+
+\note{The resulting methods are $(\gamma+1)$-order accurate.}
+
+\subsubsection*{Starting Values}
+
+A $\gamma$-step method requires $\gamma$ starting values $U_0,U_1,\ldots,U_{\gamma-1}$. \dahe RK method used on initial condition.
+
+\note{
+\mportabflex{ll}{
+explicit Adams-Bashfort&RK of order $\gamma-1$\\
+implicit Adams-Moulton&RK of order $\gamma$
+}
+}
+
+Twice RK with one order of accuracy less than the multi-step method. For AB, RK -one-step error: $\mathcal{O}(\Delta t^\gamma)$ \dahe total error $(\gamma-1)\cdot \mathcal{O}(\Delta t^\gamma)$ \dahe the global error still $\mathcal{O}(\Delta t^\gamma)$.
+
+
+\subsubsection*{Truncation Error}
+
+\note{
+\importabflex{r@{ = }l}{
+$T_{n+\gamma}$&$\frac{1}{\Delta t}\left(\sum\limits_{j=0}^\gamma\alpha_ju(t^{n+j})-\Delta t\sum\limits_{j=0}^\gamma\beta_jF(u(t^{n+j}))\right)$\\
+&$\frac{1}{\Delta t}\left(\sum\limits_{j=0}^\gamma\alpha_ju(t^{n+j})-\Delta t\sum\limits_{j=0}^\gamma\beta_ju'(t^{n+j})\right)$
+}
+
+Substitute with taylor expansions to end up with:
+
+\importabflex{rl}{
+$T_{n+\gamma}=$&$\frac{1}{\Delta t}(\sum\limits_{j=0}^\gamma\alpha_j)u(t^n)+(\sum\limits_{j=0}^\gamma j(\alpha_j-\beta_j))u'(t^n)$\\
+&$+\Delta t(\sum\limits_{j=0}^\gamma(\frac{j^2\alpha_j}{2}-j\beta_j))u''(t^n)+\ldots$\\
+&$\Delta t^{k-1}(\sum\limits_{j=0}^\gamma(\frac{j^k\alpha_j}{k!}-\frac{j^{k-1}\beta_j}{(k-1)!}))u^{(k)(t^n)}$
+}}
+
+\mportname{Consistency}{$\sum\limits_{j=0}^\gamma\alpha_j=0\qquad\sum\limits_{j=0}^\gamma j\alpha_j=\sum\limits_{j=0}^\gamma\beta_j$}
+
+\footnotesize
+\importname{Tunctuation error of order $\Delta t^k$}{$\sum\limits_{j=0}^\gamma\frac{j^q}{q!}\alpha_j=\sum\limits_{j=0}^\gamma\frac{j^{q-1}}{(q-1)!}\beta_j,\ \forall\ q\leq k+1$}\normalsize
+
+\subsubsection*{Stability of Numerical Methods for ODEs}
+
+\importname{Convergence condition}{$\lim\limits_{\underset{N\cdot\Delta t=T}{\Delta t\rightarrow 0}}U_N=u(T)$}
+
+\note{For a one-step method, the starting value coincides with the initial condition. For multi-step methods we need a condition for starting values:}
+
+\important{$\lim\limits_{\Delta t \rightarrow 0}U_j(\Delta t)=u_0\quad \forall\ 0\leq j\leq \gamma-1$}
+
+\subsubsection*{Absolute Stability}
+
+\begin{minipage}[t]{0.35\linewidth}
+\mportabflex{r@{ = }l}{
+$u'(t)$&$\lambda u(t)$\\
+$u(0)$&$u_0$
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.55\linewidth}
+\importname{Absolute stability}{$|U_{n+1}|\leq|U_n|$}
+\end{minipage}
+
+\importabflex{clc}{
+Name&Method&A-stable if\\
+\hline
+FE&$U_{n+1}=(1+\lambda \Delta t)U_n$&$|1+\lambda\Delta t|\leq 1$\\
+BE&$U_{n+1}=\frac{1}{1-\lambda\Delta t}U_n$&$\lambda\Delta t\in(-\infty,0]\cup[2,\infty)$\\
+TR&$U_{n+1}=\frac{1+\frac{\lambda\Delta t}{2}}{1-\frac{\lambda\Delta t}{2}}U_n$&$\left|\frac{1+\frac{\lambda\Delta t}{2}}{1-\frac{\lambda\Delta t}{2}}\right|\leq 1$
+}
+
+\subsubsection*{Derivation of the Poissonequation}
+
+\begin{enumerate}
+\ncompaq
+\item Elastic body on $\Omega$,$\min\left(J(u)=\onha \int_\Omega |\nabla u|^2dx-\int_\Omega uf dx\right)\rightarrow u(x)$
+\item Dirichlet BC: $u|_{\partial \Omega}\equiv 0$
+\item Euler-Lagrange equation: 
+
+$J'(u,v)=\lim\limits_{\tau\rightarrow 0}\frac{J(u+\tau v)-J(u)}{\tau}\overset{\ldots}{=}\int_\Omega\langle\nabla u,\nabla v\rangle dx-\int_\Omega fvdx=0$
+
+\note{v is direction in which we calculate the derivative.}
+\item Integration by parts yields: 
+
+$-\int_\Omega v\Delta u dx-\int_\Omega vfdx+\int_{\partial\Omega}v\frac{\partial u}{\partial v}ds(x)=0$
+
+\note{$\frac{\partial u}{\partial v}=\nabla u\cdot v$ $v$: unit outward vector, normal to boundary, $v\equiv 0$ on $\partial \Omega$}
+
+$\Rightarrow \int_\Omega(-\Delta u-f)vdx=0\ \forall v\Rightarrow$ \fbox{$-\Delta u=f u|_{\partial\Omega \equiv 0}$}
+\end{enumerate}
+
+\subsection*{Poisson Equation: Solution in 1D}
+\mportabflex{r@{ = }l}{
+$-u''(x)$&$f(x),\quad\ \forall\ x\in(0,1)$\\
+$u(0)$&$u(1)=0$
+}
+
+\begin{enumerate}
+\ncompaq
+\item $u'(y)=C_2+\int_0^yu''(z)dz=C_2-\int_0^yf(z)dz$
+\item $u(x)=C_1+\int_0^xu'(y)dy=C_1+C_2x-\int_0^x\int_0^yf(z)dzdy$
+\item $F(y)=\int_0^yf(z)dz\Rightarrow F'(y)=f(y)$
+\item IBP: $\int_0^xF(y)dy=\int_0^xy'F(y)dy=xF(x)-\int_0^xyF'(y)dy$
+
+$=\int_0^x(x-y)f(y)dy$
+\item $u(x)=C_1+C_2x-\int_0^x(x-y)f(y)dy$
+\item $u(x)=\int_0^1x(1-y)f(y)dy-\int_0^x(x-y)f(y)dy$
+
+\note{$C_1=u(0)=0\qquad C_2=u(1)=\int_0^1(1-y)f(y)dy$}
+\item \importname{Greens function}{$G(x,y)=\begin{cases}y(1-x)&0\leq y\leq x\\x(1-y)&x\leq y\leq 1\end{cases}$}
+\item $u(x)=\int_0^1G(x,y)f(y)dy$
+\end{enumerate}
+
+\note{
+\begin{itemize}
+\ncompaq
+\item The integral to find $u(x)$ is not always possible to evaluate exactly \dahe numerical quadrature rule.
+\item Slight perturbations in the poisson equation invalidate our solution. Thus a \textbf{general form of the PE} is used often:
+
+$-(a(x)u'(x))'+b(x)u'(x)+c(x)u(x)=f(x),\quad\forall x\in(0,1)$
+
+$u(0)=u(1)=0$
+\item Greens function representation are only available in 1D.
+\end{itemize}
+}
+
+\subsubsection*{1D Finite Difference Scheme}
+
+\important{$u'(x_j)\approx\frac{u_{j+1}-u_{j}}{\Delta x}\quad u''(x_j)\approx\frac{u_{j+1}-2u_j+u_{j-1}}{\Delta x^2}$}
+
+\mportant{$-u_{j+1}+2u_j-u_{j-1}=\Delta x^2 f_j,\quad \forall\ j=1,\ldots,N\quad u|_{\partial \Omega}=0$}
+
+Only internal points! $x_0 = 0,\ x_{N+1}=1,\ u_0=u_{N+1}=0$
+
+$AU=F$ \note{where $A=\begin{bmatrix}2&-1&0&\cdots&0\\-1&2&-1&\ddots&\vdots\\0&\ddots&\ddots&\ddots&0\\\vdots&\ddots&-1&2&-1\\0&\cdots&0&-1&2\end{bmatrix}\in\mathbb{R}^{N\times N}$}
+
+\important{$||u^{\Delta x}||_\infty\leq\frac{1}{8}||f^{\Delta x}||_\infty\qquad||E^{\Delta x}||_\infty\leq\frac{\Delta x^2}{96}\max\limits_{0\leq x\leq 1}|f''(x)|$}
+
+\note{where $u^{\Delta x}=[u_1,u_2,\ldots,u_N],\quad f^{\Delta x}=[f_1,f_2,\ldots,f_N]\quad E^{\Delta x}=[E_1,\ldots,E_N]$}
+
+
+\subsubsection*{FDS for 2-D Poisson Equation}
+
+\importabflex{r@{ = }l l}{
+$-(u_{xx}(x)+u_{yy}(x))$&$f(x)$&for $x\in\Omega=(0,1)^2$\\
+$u(x)$&$0$&for $x\in\delta\Omega$
+}
+
+\mportabflex{r@{ = }l l@{$\quad$}|@{$\quad$}r@{ = }l l}{
+$x_i$&$i\Delta x$&$\forall\ 1\leq i \leq N$&$y_j$&$j\Delta y$&$\forall \ 1\leq j\leq M$\\
+$x_0$&$0$&$x_{N+1}=1$&$y_0$&$0$&$y_{M+1}=1$
+}
+
+\mportant{$-\left(\frac{u_{i+1,j}-2u_{i,j}+u_{i-1,j}}{\Delta x^2}+\frac{u_{i,j+1}-2u_{i,j}+u_{i,j-1}}{\Delta y^2}\right)=f_{ij}$}
+
+\note{\hlyellow{for $N=M\Leftrightarrow \Delta x=\Delta y$}}
+
+\mportabflex{r@{ = }r}{
+$U$&$[u_{1,1},u_{2,1},\ldots,u_{N,1},u_{1,2},\ldots,u_{N,2},u_{1,N},\ldots,u_{N,N}]^T$\\
+$F$&$\Delta x^2[f_{1,1},f_{2,1},\ldots,u_{N,1},u_{1,2},\ldots,u_{N,2},u_{1,N},\ldots,u_{N,N}]^T$
+}
+
+\mportant{$AU=F,\ A\in\mathbb{R}^{N^2\times N^2}, B\in\mathbb{R}^{N\times N}$}
+
+\note{$A=\begin{bmatrix}B&-I&0&\cdot&0\\-I&B&-I&\cdot&\cdot\\0&\cdot&\cdot&\cdot&0\\\cdot&\cdot&-I&B&-I\\0&\cdot&0&-I&B\end{bmatrix}$\hfill $B=\begin{bmatrix}4&-1&0&\cdot&0\\-1&4&-1&\cdot&\cdot\\0&\cdot&\cdot&\cdot&0\\\cdot&\cdot&-1&4&-1\\0&\cdot&0&-1&4\end{bmatrix}$}
+
+\subsubsection*{FEM for 1D-Poisson}
+
+\subsubsection*{Variational Principle}
+
+\mportant{$\min\limits_{u}J(u)\qquad J(u)=\onha\int_0^1|u'(x)|^2dx-\int_0^1u(x)f(x)dx$}
+
+\mportname{Energy is well defined}{\hlyellow{$\int_0^1|u'(x)|^2dx<\infty$} $\qquad$\hlcyan{$\left|\int_0^1u(x)f(x)dx\right|<\infty$}}
+
+\footnotesize
+\mportant{\hlyellow{$H_0^1([0,1]):=\left\{u:[0,1]\rightarrow\mathbb{R}:u(0)=u(1)=0\text{ and }\int_0^1|u'(x)|^2dx<\infty\right\}$}}\normalsize
+
+\note{$H_0^1([0,1])$ is the set of all functions vanishing at the boundary and have the property that the integral of the square of their derivative is bounded. \emph{\hlpink{Sobolev space}}}
+
+\mportname{Norm on $H_0^1([0,1])$}{$||u||_{H_0^1([0,1])}:=\left(\int_0^1|u'(x)|^2dx\right)^{\onha}$}
+
+Use the Cauchy-Schwarz inequality: $|v\cdot w|\leq||v||||w||$
+
+\small
+\mportant{$\left|\int_0^1u(x)f(x)dx\right|\leq\int_0^1|u(x)||f(x)|dx\leq\left(\int_0^1|u(x)|^2dx\right)^{\onha}\cdot\left(\int_0^1|f(x)|^2dx\right)^\onha$}
+
+\importabflex{l}{$L^2([0,1]):=\left\{g:[0,1]\rightarrow\mathbb{R}:\int_0^1|g(x)|^2dx<\infty\right\}$\\
+Norm on L: $ ||g||_{L^2([0,1])}=\left(\int_0^1|g(x)|^2dx\right)^\onha$}\normalsize
+
+\important{\hlcyan{$u,f\in L^2([0,1])\Rightarrow \left|\int_0^1u(x)f(x)dx\right|<\infty$}}
+
+\subsubsection*{Constraints for well defined dirichlet energy}
+
+\importabflex{ll}{
+$u\in H_0^1([0,1])$,&$u\in L^2([0,1])$\\
+$f\in L^2([0,1])$&
+}
+
+But by the \emph{Poincaré inequality}: $||u||_{L^2([0,1])}\leq||u||_{H_0^1([0,1])}$
+
+\textbf{Precise problem formulation:}
+
+Given $f\in L^2([0,1])$, find $u\in H_0^1([0,1])$, such that u minimises the energy functional $J(v)$ for all $v\in H_0^1([0,1])$.
+
+\subsubsection*{Variational Formulation}
+
+Find $u\in H_0^1([0,1]):\ J'(u,v)=0=\lim\limits_{\tau\rightarrow 0}\frac{J(u+\tau v)-J(u)}{\tau}$
+
+Thus u must satisfy: $\int_0^1u'(x)v'(x)dx=\int_0^1v(x)f(x)dx\quad (A)$
+
+\note{
+
+\begin{itemize}
+\ncompaq
+\item (A) is the variational formulation of the 1D Poisson equation. Also known as principle of virtual work.
+\item (A) is well defined since
+
+$\left|\int_0^1u'(x)v'(x)dx\right|\leq||u||_{H_0^1([0,1])}||v||_{H_0^1([0,1])}<\infty$
+
+and since $f\in L^2([0,1])$, using Cauchy-Schwarz and Poincaré:
+
+$\left|\int_0^1v(x)f(x)dx\right|\leq ||v||_{L^2([0,1])}||f||_{L^2({0,1})}$
+
+$\leq||v||_{H_0^1([0,1])}||f||_{L^2([0,1])}<\infty$
+\item If we set $u=v$ and use Cauchy-Schwarz and Poincaré:
+
+$||u||_{H_0^1([0,1])}^2=\int_0^1|u'(x)|^2dx=\int_0^1u(x)f(x)dx$
+
+$\leq||u||_{L^2([0,1])}||f||_{L^2([0,1])}\leq||u||_{H_0^1([0,1])}||f||_{L^2([0,1])}$
+
+$\Rightarrow ||u||_{H_0^1([0,1])}\leq||f||_{L^2([0,1])}$
+
+Thus we are provided with a stability estimate on the solution. The deflection of the membrane scales smaller than the applied load.
+\end{itemize}
+
+
+Derivation of the variational formulation:
+
+\begin{enumerate}
+\ncompaq
+\item \mportant{$-u''(x)=f(x)$}
+\item Multiply with test function v: $\qquad -u''(x)v(x)=f(x)v(x)$
+\item Integrate: $\qquad -\int_0^1 u''(x)v(x)dx=\int_0^1 f(x)v(x)dx$
+\item Look at LHS: 
+
+$\int_0^1-u''(x)v(x) dx\overset{IBP}{=}[-u'(x)v(x)]-0^1-\int-u'(x)v'(x)=\int_0^1 u'(x)v'(x) dx$.
+\item Thus: $\int_0^1 u'(x)v'(x) dx = \int_0^1 f(x)v(x) dx \quad \forall \ v\in V$
+\end{enumerate}
+}
+
+\subsubsection*{FEM Formulation}
+
+Notation: $(g,h)=\int_0^1g(x)h(x)dx\qquad$
+
+\mportant{$\int_0^1u'(x)v'(x)dx=\int_0^1v(x)f(x)dx\longrightarrow (u',v')=(f,v)\quad (A)$}
+
+Domain $\Omega=[0,1]$, $h>0$, $N=\frac{1}{h}-1$, $N+2$ points:
+
+$x_0=0,\quad x_{N+1}=1,\quad x_j=jh,\ \forall\ j\in(1,N)$
+
+\note{$V^h$ is the set of all \textbf{continuous}, \textbf{piecewise linear} functions on $[0,1]$ with respect to the partition $[0,1]=\bigcup\limits_{j=1}^{N+1}[(j-1)h,jh]$.}
+
+$w(x)=\sum\limits_{j=1}^N w_j\phi_j(x)$\note{
+$\phi_j(x)=\begin{cases}\frac{x-x_{j-1}}{h}&x\in[x_{j-1},x_j)\\\frac{x_{j+1}-x}{h}&x\in[x_j,x_{j+1})\\0&\text{otherwise}\end{cases}$}
+
+\finn
+
+Now find $u_h\in V^h$ such that $(u_h',v')=(f,v)\ \forall\ v\in V^h$
+
+\mportant{\note{$(u_h',v')=(f,v)\Leftrightarrow \left(u_h',\left(\sum\limits_{j=1}^Nv_j\phi_j(x)\right)'\right)=\left(f,\sum\limits_{j=1}^Nv_j\phi_j(x)\right)$}}
+
+By linearity: $\sum\limits_{j=1}^Nv_j(u_h',\phi_j')=\sum\limits_{j=1}^N v_j(f,\phi_j)$
+
+\mportant{$(u_h',\phi_j')=(f,\phi_j)$ must hold for all $j=1,\ldots,N$}
+
+And $u_h\in V^h$: $u_h=\sum\limits_{i=1}^Nu_i\phi_i(x)\Rightarrow \sum\limits_{i=1}^Nu_i(\phi_i',\phi_j')=(f,\phi_j)$
+
+\subsubsection*{Matrix formulation}
+
+\mportant{$A=\{A_{ij}\}_{i,j=1,\ldots,N}\quad A_{ij}=(\phi_i',\phi_j')$}
+
+\note{$U=\{u_j\}_{j=1}^N\qquad F=\{F_j\}_{j=1}^N\qquad \sum\limits_{i,j}A_{ij}u_j=F_j$}
+
+\note{A is termed the stiffness matrix, F is termed the load vector and U is termed the solution vector.}
+
+\note{
+\begin{enumerate}
+\ncompaq
+\item A is symmetric: $A_{ij}=(\phi_i,\phi_j)=(\phi_j,\phi_i)$
+\item A is positive definite:
+\item \textbf{A is invertible and FEM well defined}.
+\end{enumerate}
+}
+
+\subsubsection*{FEM for 2D-Poisson}
+
+\mportant{$-\Delta u=f$ in $\Omega\qquad \left. u\right|_{\partial \Omega}\equiv 0$}
+
+\mportname{Dirichlet Energy}{$J(w)=\onha \int_\Omega|\nabla w|^2dx-\int_\Omega w(x)f(x) dx$}
+
+Find $u\in V=H_0^1(\Omega)$ such that for all $v\in V$ it holds that
+
+\mportant{$(u,v)_{H_0^1(\Omega)}=(f,v)_{L^2(\Omega)}\text{ or }\int_\Omega \langle \nabla u,\nabla v\rangle dx  =\int_\Omega f(x)v(x) dx$}
+
+\subsubsection*{Triangulation}
+
+\mportant{$\bar{\Omega}=\bigcup\limits_{K\in T_h}\bar{K}=\bar{K}_1\cup \bar{K}_2\cup\ldots\cup \bar{K}_M\qquad h=\max\limits_{K\in T_h}\text{diam} (K)$}
+
+\note{$K_i$ are triangles. $k_i\cap k_j = \phi =$ common vertices = common edges
+
+$\text{diam}(K)$: length of the longest edge of K$\qquad\mathcal{N}_i$ : set of nodes (vertices)
+
+h is the mesh width
+}
+
+\note{
+\important{$V^h=\left\{v:\Omega\rightarrow\mathbb{R}:v\right.$ cont., $v|_K$ linear for each $K\in T_h$, $v=0$ on $\left.\partial\Omega\right\}$}}
+
+\note{$V^h$: space of continuous, piecewise linear functions vanishing on the boundary $\partial\Omega$.}
+
+\subsubsection*{Concrete Realisation of FEM}
+
+\importname{Hat functions}{$\phi_j(x)\in V^h\quad\phi_j(\mathcal{N}_i)=\begin{cases}1&\text{if } j=1\\0&\text{otherwise}\end{cases}$}
+
+
+\importname{Basis for $V^h$}{$v(x)=\sum\limits_{j=1}^N v_j\phi_j(x)$}
+
+\note{where $v_j=v(\mathcal{N}_j)\ \forall\ j=1,\ldots,N$}
+
+Thus we can formulate the problem as:
+
+\mportabflex{r@{ = }l}{
+$(u_h,\phi_j)_{H_0^1(\Omega)}$&$(f,\phi_j)_{L^2(\Omega)}$\\
+$\int_\Omega\langle\nabla u_h,\nabla \phi_j\rangle dx$&$\int_\Omega f(x)\phi_j(x),\quad \forall 1\leq j\leq N$\\
+$u_h$&$\sum\limits_{i=1}^N u_i\phi_i$\\
+$\sum\limits_{i=1}^N u_i\int_\Omega \langle\nabla\phi_i,\nabla\phi_j\rangle dx$&$\int_\Omega f(x)\phi_j(x) dx$
+}
+
+\importabflex{ll}{
+$U=\{u_i\}_{i=1}^N$&$F=\{F_j\}_{j=1}^N$\\
+$A=\{A_{ij}\}_{i,j=1}^N$&\\
+$F_j=\int_\Omega f(x)\phi_j(x) dx$&$A_{ij}=\int_\Omega\langle\nabla \phi_i,\nabla\phi_j\rangle dx$\\
+\multicolumn{2}{|c|}{$AU=F$}
+}
+
+For A and B see FDS for 2-D Poisson Equation.
+
+\note{
+$\bullet$ A is symmetric.$\qquad\bullet$ A is positive definite.}
+
+\subsubsection*{Implementation of the FEM}
+
+\subsubsection*{Step 1: Triangulation}
+
+%\mportant{Triangulation $T_h$}
+%
+%\mypic{Triangulation}
+%
+%\begin{center}
+%\note{
+%$Z=\begin{bmatrix}0 &  \onha & 1 & \frac{3}{2} & 0 & \onha & \frac{5}{4} & 0 & 1 & \frac{3}{2}\\ 0 & 0 & 0 & 0 & \onha & \onha & \onha & 1 & 1 & 1 \end{bmatrix}$
+%
+%$ T = \begin{bmatrix} 1 & 2 & 2 & 3 & 3 & 4 & 7 & 6 & 6 & 5 \\ 2 & 5 & 3 & 6 & 4 & 7 & 9 & 7 & 8 & 6\\ 5 & 6 & 6 & 7 & 7 & 10 & 10 & 9 & 9 & 8\end{bmatrix}$
+%}
+%\end{center}
+
+\begin{minipage}[t]{0.45\linewidth}
+\mportant{$Z\in\mathbb{R}^{2\times N}$}
+
+\note{
+\begin{itemize}
+\ncompaq
+\item $Z(\cdot ,j)$ refers to node $\mathcal{N}_j$
+\item $Z(1,j)$, $Z(2,j)$ refer to x and y of $\mathcal{N}_j$
+\end{itemize}
+}
+\end{minipage}
+\begin{minipage}[t]{0.45\linewidth}
+\mportant{$T\in\mathbb{R}^{3\times M}$}
+
+\note{
+\begin{itemize}
+\ncompaq
+\item $T(\cdot, j)$ refers to the $j^{th}$ triangle $K_j$
+\item $T(i,j),(i=1,2,3)$ represent the indices of the nodes of $K_j$
+\end{itemize}
+}
+\end{minipage}
+
+\note{Often an additional vector denoting boundary nodes is added, enabling boundary conditions.}
+
+\subsection*{2: Element Stiffness Matrices and Element Load Vectors}
+
+\mportant{$A_{ij}=\int_\Omega \langle \nabla\phi_i,\nabla\phi_j\rangle dx = \sum\limits_{m=1}^M\int_{K_m}\langle \nabla \phi_i,\nabla\phi_j\rangle dx$}
+
+\note{$\int_{Km}\langle\nabla\phi_i,\nabla\phi_j\rangle dx \neq 0 $ only iff $\mathcal{N}_i$ and $\mathcal{N}_j$ are vertices of the same triangle!}
+
+\mportant{$T(\alpha, m),\ \alpha=1,2,3$ - Labels of the vertices of $K_m$}
+
+\mportant{$Z(i,T(\alpha,m)),\ i=1,2,\ \alpha = 1,2,3 $ - Coordinates of each vertex $T(\alpha,m)$}
+
+\importname{Local shape functions}{$\phi_\alpha\left(\mathcal{N}_{T(\beta,m)}\right)=\begin{cases}1&\text{if }\alpha = \beta\\0&\text{if }\alpha\neq\beta\end{cases}$}
+
+%\mypic{ShapeFunctions}
+
+\importname{Stiffness matrix $A^m$ for $K_m$}{$A_{\alpha,\beta}^m=\int_{K_m}\langle\nabla\phi_\alpha,\nabla\phi_\beta\rangle dx$}
+
+\note{\begin{itemize}
+\item $A^m\in\mathbb{R}^{3\times 3}$ is symmetric.
+\end{itemize}
+}
+
+\importname{Element load vector $F^m$ for $K_m$}{$F_\alpha^m=\int_{K_m}f(x)\phi_\alpha(x) dx$}
+
+\subsubsection*{Reference Triangle}
+
+%\mypic{ReferenceTriangle}
+
+\mportname{Mapping}{$\Phi_K:\hat{K}\rightarrow K$}
+
+\importable{
+$x=\Phi_K(\hat{x})$&$=\begin{pmatrix}\mathcal{N}_b-\mathcal{N}_a&\mathcal{N}_c-\mathcal{N}_a\end{pmatrix}\hat{x}+\mathcal{N}_a$\\
+&$=J_K\hat{x}+\mathcal{N}_a$}
+
+\important{$F_\alpha^K=\int_Kf(x)\phi_\alpha(x)dx=\int_{\hat{K}}f(\Phi_K(\hat{x}))\hat{\phi}_\alpha(\hat{x})|\det{(J_K)}|d\hat{x}$}
+
+\importable{$A_{\alpha,\beta}^K$&$=\int_K\langle\nabla\phi_\alpha,\nabla\phi_\beta\rangle dx$\\
+&$\int_{\hat{K}}\langle J_K^{-T}\hat{\nabla}\hat{\phi}_\alpha,J_K^{-T}\hat{\nabla}\hat{\phi}_\beta\rangle\left|\det{J_K}\right|d\hat{x}$
+}
+
+\note{
+\begin{itemize}
+\item $\hat{\phi}_\alpha$ local shape functions of the reference triangle.
+\item $\phi_\alpha(x)=\hat{\phi}_\alpha(\hat{x})\qquad\nabla\phi_\alpha = J_K^{-T}\hat{\nabla}\hat{\phi}_\alpha (\hat{x})$
+\end{itemize}
+}
+
+\subsubsection*{Step 3: Assembly}
+
+A = zeros(N,N);$\quad$f = zeros(N);
+
+looping over all triangles:
+
+$\qquad$ fetch $A^m$ and $F^m$
+
+$\qquad$ A(T($\alpha$,m),T($\beta$,m))=A(T($\alpha$,m),T($\beta$,m))+$A^m_{\alpha,\beta}$
+
+$\qquad$ F(T($\alpha$,m)=F($\alpha$,m)+$F_\alpha^m$
+
+
+\subsubsection*{Parabolic PDE}
+
+\note{$Au_{xx}+2Bu_{xt}+Cu_{tt}=F(x,t,u,u_x,u_t)\qquad AC-B^2=0\rightarrow$ parabolic.}
+
+\importname{Heat Equation}{\begin{tabular}{l@{=}ll}$u_t-\Delta u$&$0$&on $\Omega\times(0,T)$\\$u(x,0)$&$u_0(x)$&on $\Omega$\\$u(0,t)$&$u(1,t)=0$&on $(0,T)$\end{tabular}}
+
+\begin{minipage}[t]{0.4\linewidth}
+\mportant{$u=u(x,t)=\mathcal{T}(t)\mathcal{X}(x)$}
+
+\mportant{$\frac{\mathcal{T}'(t)}{\mathcal{T}(t)}=\frac{\mathcal{X}''(x)}{\mathcal{X}(x)}=-\lambda_k$}
+\end{minipage}
+\begin{minipage}[t]{0.5\linewidth}
+Solving these two ODE using BC:
+
+\begin{tabular}{l@{ = }l}
+$\mathcal{X}_k(x)$&$\sin(k\pi x),\ \lambda_k=(k\pi)^2\ \forall k\in\mathbb{Z}$\\
+$\mathcal{T}(t)$&$e^{-(k\pi)^2t}$
+\end{tabular}
+\end{minipage}
+
+\important{$u(x,t)=\mathcal{X}(x)\mathcal{T}(t)=e^{-(k\pi)^2t}\sin(k\pi x)$}
+
+\important{$u(x,t)=\sum\limits_{k=1}^\infty u_k^0 e^{-(k\pi)^2t}\sin(k\pi x)$}
+
+\note{This solution fulfils the initial PDE as well as the boundary conditions.}
+
+\subsubsection*{Evaluation of Seperation of Variables}
+
+\note{
+\begin{enumerate}
+\ncompaq
+\item Expand $u_0$ using the Fourier series:
+
+$u_0^N(x)=\sum\limits_{k=1}^Nu_k^0\sin(k\pi x)$
+
+\note{The error $|u_0-u_0^N|$ is small for large N and if $u_0$ is smooth and satisfies $u_0(0)=u_0(1)=0$}
+\item Calculate the coefficients $\{u_k^0\}_{k=1}^N$
+
+$u_k^0=2\int_0^1u_0(x)\sin(k\pi x)dx$
+\item $u_N(x,t)=\sum\limits_{k=1}^Nu_k^0e^{-(k\pi)^2t}\sin(k\pi x)$
+
+\note{\textbf{Two error sources:} Error due to the finite-truncation of the Fourier series, i.e. the series is only exact if infinite!
+
+Error due to the use of quadrature rules to approximate integrals.
+}
+\end{enumerate}}
+
+\subsubsection*{Application of Gauss-Green}
+
+\importname{\\ \note{Rate of change of $u$ in $\omega$ = Flux over the boundary + Sources - Sinks}}{$\ddt\int_\omega u(x,t)dx=-\int_{\partial\omega}F\cdot vd\sigma(x)$}
+
+\note{u(x,t) $\rightarrow$ some quantity, $F\rightarrow$ flux, $v\rightarrow$ unit outward normal}
+
+\note{$\int_\omega u_t dx=-\int_{\partial\omega}F\cdot v d\sigma(x)$
+
+Gauss-Green (Integration by parts): $\int_{\partial\omega}F\cdot v d\sigma (x) = \int_\omega\nabla(F) dx$
+
+$\int_\omega (u_t+\nabla F) dx =0\ \forall\ \omega\in\Omega\Rightarrow $\fbox{$u_t+\nabla(F) = 0$} where $F=F(t,x,u,\nabla u,\ldots)$
+}
+
+Special case: heat conduction: $F\propto -\nabla u\Rightarrow u_t=\Delta u$
+
+\subsubsection*{Energy Estimate}
+
+\mportname{Energy estimate}{$\mathcal{E}(t):=\onha \int_0^1|u(x,t)|^2dx$}
+
+\note{$\frac{d\mathcal{E}}{dt}=\onha\int_0^1(u^2)_tdx=\int_0^1uu_tdx=\int_0^1uu_{xx}dx=$
+
+$=-\int_0^1 u_x^2dx+[uu_x]_0^1 \overset{\text{BC}}{=}-\int_0^1u_x^2dx$}
+
+\important{$\frac{d\mathcal{E}}{dt}=-\int_0^1u_x^2dx\leq 0\Rightarrow \mathcal{E}(t)\leq \mathcal{E}(0)$}
+
+\subsubsection*{Maximum Principles}
+
+\important{$\max\limits_{\substack{0\leq x\leq 1,\\0\leq t\leq T}}u(x,t)\leq\max(0,\max\limits_x(u_0(x)))$}
+
+\subsubsection*{Explicit Finite Difference Schemes for the Heat Equation}
+
+\begin{enumerate}
+\ncompaq
+\item Discretising the Domain:
+
+\note{$\Delta x>0\quad \delta t > 0 \quad N =\frac{1}{\Delta x}-1$
+
+$x_0=0,\quad x_j=j\Delta x,\ j=1,\ldots, N,\quad x_{N+1}=1$
+
+$\rightarrow N+2$ equally spaced points
+
+$t_0=0,\quad t^n=n\Delta t,\ n=1,\ldots,M,\quad t^{M+1}=T$
+}
+
+\item Discretising the Solution u $U^n_j\approx u(x_j,t^n)$
+\item Discretising the Derivatives like in 1D FDS page 1
+
+\item The FDS: $\frac{U_j^{n+1}-U_j^n}{\Delta t}-\frac{U_{j+1}^n-2U_j^n+U_{j-1}^n}{\Delta x^2}=0$
+
+\note{$\lambda = \frac{\Delta t}{\Delta x^2}$} \dahe $U_j^{n+1}=(1-2\lambda)U_j^n+\lambda U_{j+1}^n+\lambda U_{j-1}^n$
+
+\end{enumerate}
+
+IC and BC:$\quad$
+\begin{tabular}{l@{ = }ll}
+$U_j^0$&$u(x_j,0)=u_0(x_j),$&$\forall\ 1\leq j\leq N$\\
+$U_0^n$&$U_{N+1}^n\equiv 0$&$\forall\ 0\leq n\leq M+1$
+\end{tabular}
+
+\note{Called \glqq explicit\grqq since we use the explicit euler method for time stepping.
+}
+
+\importname{Stability condition}{$\Delta t\leq \frac{1}{2}\Delta x^2$}
+
+%\subsubsection*{Simplified notation}
+%
+%\note{
+%\mportabflex{ll@{ = }l}{
+%Forward difference in space&$D^+_x w_j^n$&$\frac{w_{j+1}^n-w_j^n}{\Delta x}$\\
+%Backward difference in space&$D_x^-w_j^n$&$\frac{w_j^n-w_{j-1}^n}{\Delta x}$\\
+%Forward difference in time&$D_t^+w_j^n$&$\frac{w_j^{n+1}-w_j^n}{\Delta t}$\\
+%Backward difference in time&$D_t^-w_j^n$&$\frac{w_j^n-w_j^{n-1}}{\Delta t}$
+%}}
+%
+%The finite difference scheme can then be recast as: 
+%
+%\mportant{$D_t^+U_n^j-D_x^-D_x^+U_n^j=0$}
+
+\subsubsection*{Truncation Error}
+
+\mportant{$\tau_j^n=\frac{u_j^{n+1}-u_j^n}{\Delta t}-\frac{u_{j-1}^n-2u_j^n+u_{j+1}^n}{\Delta x^2}$ \note{or equivalently $\tau_j^n=D_t^+u_j^n-D_x^-D_x^+u_j^n$}}
+
+\important{$|\tau_j^n|\leq C(\Delta t+\Delta_x)$ or $\sqrt{\frac{\Delta x}{2}\sum\limits_{j=1}^N|u_j^n-U_j^n|^2\leq \bar{C}(\Delta t+\Delta x^2}$}
+
+\note{Thus the explicit finite difference scheme has a first-order rate of convergence in time and a second-order rate of convergence in space.}
+
+\subsubsection*{An Implicit Finite Difference Scheme}
+
+\mportant{$D_t^-U_j^{n+1}=D_x^-D_x^+U_j^{N+1}$}
+
+\mportant{$\frac{U_j^{n+1}-U_j^n}{\Delta t}=\frac{U_{j-1}^{n+1}-2U_j^{n+1}+U_{j+1}^{n+1}}{\Delta x^2}$}
+
+\note{$\lambda = \frac{\Delta t}{\Delta x^2}$}
+
+\mportant{$-\lambda U_{j-1}^{n+1}+(1+2\lambda)U_j^{n+1}-\lambda U_{j+1}^{n+1}=U_j^n$}
+
+\mportant{$A U^{n+1} = F^n$}
+
+\important{$U^{n+1}=\{U_j^{n+1}\}_{j=1}^N\qquad F^n=\{U_j^n\}_{j=1}^N$}
+
+\note{
+\important{$A =\begin{bmatrix}1+2\lambda&-\lambda&0&\cdot&0\\-\lambda&1+2\lambda&-\lambda&\cdot&\cdot\\0&\cdot&\cdot&\cdot&0\\\cdot& \cdot&-\lambda&1+2\lambda&-\lambda\\0&\cdot&0&-\lambda&1+2\lambda\end{bmatrix}$}}
+
+\important{Unconditional stability!}
+
+\subsubsection*{Crank-Nicloson Scheme}
+
+\mportant{$D_t^+U_j^n=\onha D_x^-D_x^+U_j^n+\onha D_x^2D_x^+U_j^{n+1}$}
+
+\mportant{$\frac{U_j^{n+1}-U_j^n}{\Delta t}=\frac{U_{j-1}^n-2U_j^n+U_{j+1}^n}{2\Delta x^2}+\frac{U_{j-1}^{n+1}-2U_j^{n+1}+U_{j+1}^{n+1}}{2\Delta x^2}$}
+
+\note{Crank-Nicholson is the formal average of the explicit finite difference scheme and the implicit finite difference scheme.}
+
+\mportant{$U_0^n=U_{N+1}^n=0\qquad U_j^0=u_j^0=u_0(x_j)\qquad \lambda = \frac{\Delta t}{\Delta x^2}$}
+
+\mportant{$-\frac{\lambda}{2}U_{j-1}^{n+1}+(1+\lambda)U_j^{n+1}-\frac{\lambda}{2}U_{j+1}^{n+1}=\frac{\lambda}{2}U_{j-1}^n+(1-\lambda)U_j^n-\frac{\lambda}{2}U_{j+1}^n=F_j^n$}
+
+\mportant{$AU^{n+1}=F^n$}
+
+\important{$U^{n+1}=\{U_j^{n+1}\}_{j=1}^N\qquad F^n=\{F_j^n\}_{j=1}^N$}
+
+\important{$A=\begin{bmatrix}1+\lambda&-\frac{\lambda}{2}&0&\cdot&0\\-\frac{\lambda}{2}&1+\lambda&-\frac{\lambda}{2}&\cdot&\cdot\\0&\cdot&\cdot&\cdot&0\\ \cdot&\cdot&-\frac{\lambda}{2}&1+\lambda&-\frac{\lambda}{2}\\0&\cdot& 0&-\frac{\lambda}{2}&1+\lambda\end{bmatrix}$}
+
+\important{Unconditionally stable!}
+
+\note{Despite the unconditional stability the CN-scheme \textbf{only satisfies the discrete maximum principle if} $\lambda = \frac{\Delta t}{\Delta x^2}\leq 1$. For large values of $\lambda$ the solution may contain spurious oscillations.}
+
+\subsubsection*{Truncation error}
+
+\mportant{$\tau_j^n=\frac{u_j^{n+1}-u_j^n}{\Delta t}-\frac{u_{j-1}^n-2u_j^n+u_{j+1}^n}{2\Delta x^2}-\frac{u_{j-1}^{n+1}-2u_j^{n+1}+u_{j+1}^{n+1}}{2\Delta x^2}$}
+
+\mportant{$\tau_j^n=D_t^+u_j^n-\left(\onha D_x^-D_x^+u_j^n+\onha D_x^-D_x^+u_j^{n+1}\right)$}
+
+\important{$|\tau_j^n|\leq C(\Delta t^2+\Delta x^2$}
+
+\note{CN has a second-order rate of convergence in both time and space.}
+
+\subsubsection*{Linear Transport Equations (Hyperbolic PDEs)}
+
+\mportant{$u_t+a(x,t)u_x = 0\ \forall (x,t)\in\mathbb{R}\times\mathbb{R}_+$}
+
+\subsubsection*{Method of Characteristics}
+
+Assume that we have a curve along which the solution u is constant.
+
+\mportant{$u(x,0)=u_0(x)$}
+
+\mportabflex{l@{ = }l}{
+$0$&$\ddt u(x(t),t)$\\
+&$u_t(x(t),t)+u_x(x(t),t)x'(t)$
+}
+
+\note{where x(t) is a characteristic curve.}
+
+Since this has to fulfil the linear transport equation we know that:
+
+\mportabflex{l@{ = }l}{
+$x'(t)$&$a(x(t),t)$\\
+$x(0)$&$x_0$
+}
+
+\subsubsection*{Gronwall's inequality}
+
+\mportant{$u'(t)\leq\beta(t)u(t)\quad\forall\ t\in(a,b)$}
+
+\note{where $\beta(t)$ continuous, $u(t)$ differentiable on some $[a,b]$.}
+
+\important{$u(t)\leq u(a) \exp\left(\int_a^t\beta(t)dt\right)\quad\forall\ t\in[a,b]$}
+
+Let $u(x,t)$ be a smooth solution, $\lim\limits_{|x|\rightarrow\infty}u(x,t)=0$. Then u fulfils the following energy bound:
+
+\important{$\int_\mathbb{R}u^2(x,t)dx\leq e^{||a||_{C^1}t}\int_\mathbb{R}u_0^2(x)dx$}
+
+\subsubsection*{Finite difference schemes}
+
+\subsubsection*{Discretization}
+
+$[x_l,x_r]$ is discretized with a mesh size $\Delta x$ into a sequence of $N+1$ points.
+
+Divide $[0,T]$ into M points $t^n=n\Delta t$
+
+Then a finite difference scheme is applied:
+
+\mportant{$\frac{U_j^{n+1}-U_j^n}{\Delta t}+\frac{a(U_{j+1}^n-U_{j-1}^n)}{2\Delta x}=0$}
+
+By an energy analysis we conclude that this central difference scheme does not produce valid but oscillatory solutions with increasing energies.
+
+\subsubsection*{Upwind schemes}
+
+The central scheme does not respect the direction of propagation of information for the transport equation. This is corrected by the upwind scheme.
+
+As found by the method of characteristics the characteristic curves are defined by:
+ 
+\mportant{$x'(t)=a$}
+
+Thus if $a>0$ the direction of information propagation is from left to right, then we use a backward difference in space to obtain our scheme. We do the opposite if $a<0$.
+
+\mportant{$a^+=\max\{a,0\},\quad a^-=\min\{a,0\},\quad |a|=a^+-a^-$}
+
+Thus the combined (backwards/forwards) upwind scheme can be written as:
+
+\important{$\frac{U_j^{n+1}-U_j^n}{\Delta t}+\frac{a^+(U_j^n-U_{j-1}^n)}{\Delta x}+\frac{a^-(U_{j+1}^n-U_j^n)}{\Delta x}=0$}
+
+or
+
+\important{$\frac{U_j^{n+1}-U_j^n}{\Delta t}+\frac{a(U_{j+1}^n-U_{j-1}^n)}{2\Delta x}=\underbrace{\frac{|a|}{2\Delta x}(U_{j+1}^n-2U_j^n+U_{j-1}^n)}_\text{numerical viscosity}$}
+
+However the upwind scheme still is only stable for some $\frac{\Delta t}{\Delta x}.$
+
+\subsubsection*{Stability for the upwind scheme}
+
+If $|a|\frac{\Delta t}{\Delta x}\leq 1$ the upwind scheme satisfies the energy estimate \\ $E^{n+1}\leq E^n$ and is thus \textbf{conditionally stable.}
+
+\end{multicols*}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

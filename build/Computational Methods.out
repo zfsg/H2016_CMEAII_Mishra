@@ -1,0 +1,85 @@
+\BOOKMARK [1][-]{section.1}{ODE}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Definitions}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{IVP}{section.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.2.1}{Single Body Dynamics}{subsection.1.2}% 4
+\BOOKMARK [3][-]{subsubsection.1.2.2}{Trick: Vectorization}{subsection.1.2}% 5
+\BOOKMARK [3][-]{subsubsection.1.2.3}{N-Body Dynamics}{subsection.1.2}% 6
+\BOOKMARK [2][-]{subsection.1.3}{Matrix exponential technique}{section.1}% 7
+\BOOKMARK [1][-]{section.2}{Numerical Methods for ODE}{}% 8
+\BOOKMARK [2][-]{subsubsection.2.0.1}{Time discretization}{section.2}% 9
+\BOOKMARK [2][-]{subsection.2.1}{Forward Euler Method \(Explicit\)}{section.2}% 10
+\BOOKMARK [2][-]{subsection.2.2}{Backward Euler Method \(Implicit\)}{section.2}% 11
+\BOOKMARK [2][-]{subsection.2.3}{Trapezoidal Method}{section.2}% 12
+\BOOKMARK [2][-]{subsection.2.4}{Mid-point Rule}{section.2}% 13
+\BOOKMARK [2][-]{subsection.2.5}{Trunctuation error}{section.2}% 14
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Example: Forward Euler method}{subsection.2.5}% 15
+\BOOKMARK [3][-]{subsubsection.2.5.2}{One-Step Error}{subsection.2.5}% 16
+\BOOKMARK [3][-]{subsubsection.2.5.3}{Global Error}{subsection.2.5}% 17
+\BOOKMARK [2][-]{subsection.2.6}{Newtons Method}{section.2}% 18
+\BOOKMARK [1][-]{section.3}{Higher-Order Methods for ODEs}{}% 19
+\BOOKMARK [2][-]{subsection.3.1}{Runga-Kutta-2 \(RK-2\)}{section.3}% 20
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Order of Accuracy}{subsection.3.1}% 21
+\BOOKMARK [2][-]{subsection.3.2}{Runge-Kutta-4 \(RK-4\)}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.3}{Runge-Kutta-N \(RK-N\)}{section.3}% 23
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Explicit RK}{subsection.3.3}% 24
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Diagonally Implicit RK \(DIRK\)}{subsection.3.3}% 25
+\BOOKMARK [1][-]{section.4}{Multi-Step Methods}{}% 26
+\BOOKMARK [2][-]{subsection.4.1}{Adam's Method}{section.4}% 27
+\BOOKMARK [2][-]{subsection.4.2}{Adams-Bashforth Method}{section.4}% 28
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Approach to find j}{subsection.4.2}% 29
+\BOOKMARK [2][-]{subsection.4.3}{Adams-Moulton Methods}{section.4}% 30
+\BOOKMARK [2][-]{subsection.4.4}{Truncation Error}{section.4}% 31
+\BOOKMARK [2][-]{subsection.4.5}{Starting Values}{section.4}% 32
+\BOOKMARK [2][-]{subsection.4.6}{Discussion of MS Methods}{section.4}% 33
+\BOOKMARK [1][-]{section.5}{Stability of Numerical Methods for ODEs}{}% 34
+\BOOKMARK [2][-]{subsection.5.1}{Convergence of Forward Euler for Linear ODEs}{section.5}% 35
+\BOOKMARK [2][-]{subsection.5.2}{Convergence of Forward Euler for Non-Linear ODEs}{section.5}% 36
+\BOOKMARK [2][-]{subsection.5.3}{Convergence of Consistent One-Step Methods}{section.5}% 37
+\BOOKMARK [2][-]{subsection.5.4}{Absolute Stability}{section.5}% 38
+\BOOKMARK [3][-]{subsubsection.5.4.1}{Absolute Stability of BE}{subsection.5.4}% 39
+\BOOKMARK [3][-]{subsubsection.5.4.2}{Absolute Stability of the Trapezoidal Rule}{subsection.5.4}% 40
+\BOOKMARK [2][-]{subsection.5.5}{Stiff Problems}{section.5}% 41
+\BOOKMARK [1][-]{section.6}{The Poisson Equation}{}% 42
+\BOOKMARK [2][-]{subsubsection.6.0.1}{Derivation of the Poissonequation}{section.6}% 43
+\BOOKMARK [2][-]{subsection.6.1}{Poisson Equation in 1D}{section.6}% 44
+\BOOKMARK [2][-]{subsection.6.2}{Finite Difference Method}{section.6}% 45
+\BOOKMARK [3][-]{subsubsection.6.2.1}{Discretization}{subsection.6.2}% 46
+\BOOKMARK [3][-]{subsubsection.6.2.2}{Finite difference scheme}{subsection.6.2}% 47
+\BOOKMARK [3][-]{subsubsection.6.2.3}{Numerical Results}{subsection.6.2}% 48
+\BOOKMARK [2][-]{subsection.6.3}{FDS for 2-D Poisson Equation}{section.6}% 49
+\BOOKMARK [3][-]{subsubsection.6.3.1}{Discretization}{subsection.6.3}% 50
+\BOOKMARK [3][-]{subsubsection.6.3.2}{Finite Difference Scheme}{subsection.6.3}% 51
+\BOOKMARK [1][-]{section.7}{FEM for 1D-Poisson}{}% 52
+\BOOKMARK [2][-]{subsection.7.1}{Variational Principle}{section.7}% 53
+\BOOKMARK [2][-]{subsection.7.2}{Variational Formulation}{section.7}% 54
+\BOOKMARK [2][-]{subsection.7.3}{FEM Formulation}{section.7}% 55
+\BOOKMARK [2][-]{subsection.7.4}{Concrete Realisation of FEM}{section.7}% 56
+\BOOKMARK [2][-]{subsection.7.5}{Convergence Analysis}{section.7}% 57
+\BOOKMARK [1][-]{section.8}{FEM for 2D-Poisson}{}% 58
+\BOOKMARK [2][-]{subsection.8.1}{Variational Formulation}{section.8}% 59
+\BOOKMARK [2][-]{subsection.8.2}{FEM Formulation}{section.8}% 60
+\BOOKMARK [2][-]{subsection.8.3}{Concrete Realisation of FEM}{section.8}% 61
+\BOOKMARK [1][-]{section.9}{Implementation of the FEM}{}% 62
+\BOOKMARK [2][-]{subsection.9.1}{Step 1: Triangulation}{section.9}% 63
+\BOOKMARK [2][-]{subsection.9.2}{Step 2: Element Stiffness Matrices and Element Load Vectors}{section.9}% 64
+\BOOKMARK [2][-]{subsection.9.3}{Step 3: Assembly}{section.9}% 65
+\BOOKMARK [1][-]{section.10}{Parabolic PDE}{}% 66
+\BOOKMARK [2][-]{subsection.10.1}{Seperation of Variables}{section.10}% 67
+\BOOKMARK [3][-]{subsubsection.10.1.1}{Application of Gauss-Green}{subsection.10.1}% 68
+\BOOKMARK [2][-]{subsection.10.2}{Energy Estimate}{section.10}% 69
+\BOOKMARK [2][-]{subsection.10.3}{Uniqueness of a solution}{section.10}% 70
+\BOOKMARK [2][-]{subsection.10.4}{Maximum Principles}{section.10}% 71
+\BOOKMARK [2][-]{subsection.10.5}{Explicit Finite Difference Schemes for the Heat Equation}{section.10}% 72
+\BOOKMARK [3][-]{subsubsection.10.5.1}{Simplified notation}{subsection.10.5}% 73
+\BOOKMARK [3][-]{subsubsection.10.5.2}{Truncation Error}{subsection.10.5}% 74
+\BOOKMARK [2][-]{subsection.10.6}{An Implicit Finite Difference Scheme}{section.10}% 75
+\BOOKMARK [2][-]{subsection.10.7}{Crank-Nicloson Scheme}{section.10}% 76
+\BOOKMARK [3][-]{subsubsection.10.7.1}{Truncation error}{subsection.10.7}% 77
+\BOOKMARK [2][-]{subsection.10.8}{Convergence Studies}{section.10}% 78
+\BOOKMARK [1][-]{section.11}{Linear Transport Equations \(Hyperbolic PDEs\)}{}% 79
+\BOOKMARK [2][-]{subsection.11.1}{Method of Characteristics}{section.11}% 80
+\BOOKMARK [3][-]{subsubsection.11.1.1}{Gronwall's inequality}{subsection.11.1}% 81
+\BOOKMARK [2][-]{subsection.11.2}{Finite difference schemes}{section.11}% 82
+\BOOKMARK [3][-]{subsubsection.11.2.1}{Discretization}{subsection.11.2}% 83
+\BOOKMARK [3][-]{subsubsection.11.2.2}{Upwind schemes}{subsection.11.2}% 84
+\BOOKMARK [3][-]{subsubsection.11.2.3}{Stability for the upwind scheme}{subsection.11.2}% 85
